@@ -1,5 +1,26 @@
 <!DOCTYPE html>
 <html>
+<head>
+<style>
+#overlay {
+    position: fixed;
+	pointer-events: none;	
+    display: none; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(193, 66, 66, 0.2); 
+    z-index: 2; 
+    cursor: pointer; 
+} 
+body {
+    background-color: rgba(193, 66, 66, 0.2);
+}
+</style>
+</head>
 <body>
 <script src="blockly/blockly_compressed.js"></script>
 <script src="blockly/JavaScript_compressed.js"></script>
@@ -10,15 +31,17 @@
  <p>
     <button onclick="showCodeJavaScript()">Show JavaScript</button>
     <button onclick="runCodeJavaScript()">Run JavaScript</button>
-	
+	<button onclick="overlayOn()">Overlay</button>
 </p>
 
 <div id="blocklyDiv" style="height: 550px; width: 600px;"></div>
 <!--#include file="toolbox.xml" -->
 
-<div id="overlay"></div>
 
-<xml id="toolbox" style="display: none">
+
+
+
+<xml id="toolbox" style="display: none ">
   <category name="Logic" colour="#5C81A6">
     <block type="controls_if"></block>
     <block type="logic_compare">
@@ -376,7 +399,7 @@
   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
 </xml>
-
+<div id="overlay"></div>
 <script>
   var myWorkspace = Blockly.inject('blocklyDiv',
       {media: 'blockly/media/', 
@@ -397,8 +420,16 @@
       var code = Blockly.JavaScript.workspaceToCode(myWorkspace);
       alert(code);
     }
-	
-
+	function overlayOn() {
+		if (document.getElementById("overlay").style.display == "block"){
+			document.getElementById("overlay").style.display = "none";
+		}
+		else{
+		document.getElementById("overlay").style.display = "block";}
+}
+//	function overlayOn(color) {
+ //  document.body.style.background = color;
+//}
 
     function runCodeJavaScript() {
       // Generate JavaScript code and run it.
