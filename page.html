@@ -10,12 +10,11 @@
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/js/en.js"></script>
 
-
-
-	<div class="options">
+<div class="options">
   <button class = "codebuttons" onclick="showCodeJavaScript()">Show JavaScript</button>
-    <button class = "codebuttons" onclick="runCodeJavaScript()">Run JavaScript</button>
-	<div class="dropdown">
+  <button class = "codebuttons" onclick="runCodeJavaScript()">Run JavaScript</button>
+  <button class = "codebuttons" onclick ="changeColour()"> Colour Test</button>
+  <div class="dropdown">
     <button class = "dropdownbutton"  >Overlay
       <i class="fa fa-caret-down"></i>
     </button>
@@ -29,6 +28,7 @@
 </div>
 	
 <div  id="blocklyDiv" style="height: 550px; width: 600px;"></div>
+
 <xml id="toolbox" style="display: none ">
   <category name="Logic" colour="#5C81A6">
     <block type="controls_if"></block>
@@ -384,7 +384,7 @@
     </block>
   </category>
   <sep></sep>
-  <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+  <category name="Colours" custom="COLOUR_PALETTE"></category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
 </xml>
 
@@ -393,6 +393,7 @@
 <div id="yellowOverlay" ></div>
 
 <script src="main.js"></script>
+<script src="varcolour.js"></script>
 
 </body>
 </html>

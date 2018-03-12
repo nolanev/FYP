@@ -12,7 +12,7 @@ var myWorkspace = Blockly.inject('blocklyDiv',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
-  
+ 
 	 
 	 function showCodeJavaScript() {
       // Generate JavaScript code and display it.
@@ -42,11 +42,11 @@ var myWorkspace = Blockly.inject('blocklyDiv',
 		}
 		
 	}
+	myApplication={};
 	
-
-
-
-
+	function changeColours(){
+		
+	}
 
 function overlayMenu() {
     document.getElementById("myDropdown").classList.toggle("show");
