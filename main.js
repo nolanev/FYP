@@ -1,4 +1,64 @@
 
+/*
+Blockly.Blocks['controls_if'] = {
+ init: function() {
+   
+	this.setColour(300);
+
+}};*/
+//////I HAVE LOST THE STRUCTURE BUT I HAVE CHANGED THE COLOUR
+//////https://github.com/awmorp/math-blockly/blob/gh-pages/js/math-blocks-vectors.js#L79
+//////http://jsbin.com/poreni/1/edit?js,output
+
+
+Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
+  // Block for variable getter.
+  {
+    "type": "variables_get",
+    "message0": "%1",
+    "args0": [
+      {
+        "type": "field_variable",
+        "name": "VAR",
+        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
+      }
+    ],
+    "output": null,
+	
+    "colour": "240",
+    "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
+    "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
+    "extensions": ["contextMenu_variableSetterGetter"]
+  },
+  // Block for variable setter.
+  {
+    "type": "variables_set",
+    "message0": "%{BKY_VARIABLES_SET}",
+    "args0": [
+      {
+        "type": "field_variable",
+        "name": "VAR",
+        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
+      },
+      {
+        "type": "input_value",
+        "name": "VALUE"
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": "240",
+    "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
+    "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
+    "extensions": ["contextMenu_variableSetterGetter"]
+  }
+]);  // END JSON EXTRACT (Do not delete this comment.)
+/*Blockly.Blocks['variables_set']={
+	function(){
+	this.setColour(300);
+}};
+this one works to chnage the colour but it also overrides the shape of the block so idk what to do
+*/
 
 
 var myWorkspace = Blockly.inject('blocklyDiv',
@@ -44,9 +104,7 @@ var myWorkspace = Blockly.inject('blocklyDiv',
 	}
 	myApplication={};
 	
-	function changeColours(){
-		
-	}
+
 
 function overlayMenu() {
     document.getElementById("myDropdown").classList.toggle("show");
