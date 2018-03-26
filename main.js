@@ -1,6 +1,7 @@
 var hueDict={};
-var hues= [0,180,300, 120, 240, 60];
+var hues= [10,180,300, 120, 240, 60];
 var counter=0;
+var firstVar=true;
 
 //WORKSPACE
 var workspace = Blockly.inject('blocklyDiv',
@@ -14,7 +15,7 @@ var workspace = Blockly.inject('blocklyDiv',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
-
+Blockly.Constants.Loops.HUE = 220;
 //JAVASCRIPT	 
 function showCodeJavaScript() {
       // Generate JavaScript code and display it.
@@ -78,42 +79,36 @@ function overlayOn(colour){
 	}
 
 //COLOUR CHANGE
-workspace.addChangeListener(function( event ) { //Blockly.Events.VAR_RENAME
-	if (event.type==Blockly.Events.VAR_CREATE){
-		//here i need to set the colour of each variable as I create them
-		hueDict[event.varId]=hues[counter];
-		console.log(hueDict[event.varId]);
-		counter=counter+1;
-		counter = counter %6;
-		var newhuehudis= hueDict[event.varId];
+function recolor(block, hue) { 
+	
+    var oldInit = block.init; 
+    block.init = function() { 
+      oldInit.call(this); 
+      this.setColour(hue); 
+    } 
+  } 
+
+workspace.addChangeListener(function( event ) { 
+	if ((event.type==Blockly.Events.VAR_CREATE)){
+	
 		var newvar = workspace.getVariableById(event.varId);
-		var block= workspace.getBlockById(event.blockId);
 		
-		console.log(block);
-		}
+				}
 	else if(event.type== Blockly.Events.BLOCK_CREATE){
 		var block= workspace.getBlockById(event.blockId);
-		//console.log(block.getFieldValue('VAR')); //this returns the variable id
+		
 		var varId = block.getFieldValue('VAR');
+			
 		block.setColour(hueDict[varId]);
-		console.log(block);
+		
 	}
 		
 	else if (event.type==Blockly.Events.BLOCK_CHANGE){
-		//when the block is chnaged from the drop down menu I need to change its colour
-		//block['colour_']
-		/*console.log(block['field']);// nope
-		console.log(event.element); //try get the value of feild?
-		console.log(event.newValue); //block id
-		console.log(event.name); //VAR*/
-		
+
 		var block= workspace.getBlockById(event.blockId);
 		var varId = block.getFieldValue('VAR');
 		block.setColour(hueDict[varId]);
-		//console.log(block);
-		//console.log(block['args0']);
-		/*if(block['hue_']==200){block.setColour(100);}
-		else block.setColour(200);*/
+	
 		;}	
 	} )
 Blockly.Variables.flyoutCategory = function(workspace) {
@@ -132,9 +127,11 @@ Blockly.Variables.flyoutCategory = function(workspace) {
 
   var blockList = Blockly.Variables.flyoutCategoryBlocks(workspace);
   xmlList = xmlList.concat(blockList);
-  //console.log("haiii");
+ 
   return xmlList;
 };
+
+
 Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   var variableModelList = workspace.getVariablesOfType('');
   variableModelList.sort(Blockly.VariableModel.compareByName);
@@ -142,8 +139,27 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   var xmlList = [];
   if (variableModelList.length > 0) {
     var firstVariable = variableModelList[0];
+	
+	//only going here if this is the first variable to be logged
+	if(firstVar){
+		hueDict[firstVariable.getId()]=hues[counter];
+		counter=counter+1;
+		counter = counter %6;
+		firstVar=false;
+	}
+	
     if (Blockly.Blocks['variables_set']) {
       var gap = Blockly.Blocks['math_change'] ? 8 : 24;
+	  
+	  if( !hueDict[firstVariable.getId()]){
+			hueDict[firstVariable.getId()]=hues[counter];
+			counter=counter+1;
+			counter = counter %6;
+			}
+	  
+	  var myhue=hueDict[firstVariable.getId()];
+	  
+	  recolor(Blockly.Blocks['variables_set'],myhue);
 	  
       var blockText = '<xml>' +
             '<block type="variables_set" gap="' + gap + '">' +
@@ -151,11 +167,14 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
             '</block>' +
             '</xml>';
 		
+		
       var block = Blockly.Xml.textToDom(blockText).firstChild;
-	  console.log(block);
+	
 	  xmlList.push(block);
     }
     if (Blockly.Blocks['math_change']) {
+	  var myhue=hueDict[firstVariable.getId()];
+	  recolor(Blockly.Blocks['math_change'],myhue);
       var gap = Blockly.Blocks['variables_get'] ? 20 : 8;
       var blockText = '<xml>' +
           '<block type="math_change" gap="' + gap + '">' +
@@ -174,12 +193,22 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
 	
     for (var i = 0, variable; variable = variableModelList[i]; i++) {
       if (Blockly.Blocks['variables_get']) {
+		  
+		if( !hueDict[variable.getId()]){
+			hueDict[variable.getId()]=hues[counter];
+			counter=counter+1;
+			counter = counter %6;}
+			
+		var myhue=hueDict[variable.getId()];
+		
+		
         var blockText = '<xml>' +
             '<block type="variables_get" gap="8">' +
             Blockly.Variables.generateVariableFieldXml_(variable) +
             '</block>' +
             '</xml>';
         var block = Blockly.Xml.textToDom(blockText).firstChild;
+		
         xmlList.push(block);
       }
     }
@@ -215,10 +244,7 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
               // No conflict
 			  
               var block= workspace.createVariable(text, type);
-			  //console.log(block['args0']);
-			 
-			  //console.log(block);
-              if (opt_callback) {
+			  if (opt_callback) {
                 opt_callback(text);
 				
               }
@@ -236,3 +262,4 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
 };
 
 
+    
