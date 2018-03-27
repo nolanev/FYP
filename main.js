@@ -1,5 +1,5 @@
 var hueDict={};
-var hues= [10,180,300, 120, 240, 60];
+var hues= [10,180,300, 320, 240, 60];
 var counter=0;
 var firstVar=true;
 
@@ -100,7 +100,6 @@ workspace.addChangeListener(function( event ) {
 		var varId = block.getFieldValue('VAR');
 			
 		block.setColour(hueDict[varId]);
-		
 	}
 		
 	else if (event.type==Blockly.Events.BLOCK_CHANGE){
@@ -130,8 +129,6 @@ Blockly.Variables.flyoutCategory = function(workspace) {
  
   return xmlList;
 };
-
-
 Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   var variableModelList = workspace.getVariablesOfType('');
   variableModelList.sort(Blockly.VariableModel.compareByName);
@@ -215,51 +212,63 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   }
   return xmlList;
 };
-Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback, opt_type) {
-  var type = opt_type || '';
-  // This function needs to be named so it can be called recursively.
-  var promptAndCheckWithAlert = function(defaultName) {
-    Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
-        function(text) {
-			
-          if (text) {
-			
-            var existing =
-                Blockly.Variables.nameUsedWithAnyType_(text, workspace);
-            if (existing) {
-              var lowerCase = text.toLowerCase();
-              if (existing.type == type) {
-                var msg = Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace(
-                    '%1', lowerCase);
-              } else {
-                var msg = Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE;
-				
-                msg = msg.replace('%1', lowerCase).replace('%2', existing.type);
-              }
-              Blockly.alert(msg,
-                  function() {
-                    promptAndCheckWithAlert(text);  // Recurse
-                  });
-            } else {
-              // No conflict
-			  
-              var block= workspace.createVariable(text, type);
-			  if (opt_callback) {
-                opt_callback(text);
-				
-              }
-            }
-          } else {
-            // User canceled prompt.
-            if (opt_callback) {
-              opt_callback(null);
-            }
-          }
-        });
-  };
- 
-  promptAndCheckWithAlert('');
+
+Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
+  // Block for variable getter.
+  {
+    "type": "variables_get",
+    "message0": "%1",
+    "args0": [
+      {
+        "type": "field_variable",
+        "name": "VAR",
+        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
+      }
+    ],
+    "output": null,
+	
+    "colour": "10",
+    "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
+    "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
+	"mutator": "colour_change_mutator",
+    "extensions": ["contextMenu_variableSetterGetter"]
+  },
+  // Block for variable setter.
+  {
+    "type": "variables_set",
+    "message0": "%{BKY_VARIABLES_SET}",
+    "args0": [
+      {
+        "type": "field_variable",
+        "name": "VAR",
+        "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
+      },
+      {
+        "type": "input_value",
+        "name": "VALUE"
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": "%{BKY_VARIABLES_HUE}",
+    "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
+    "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
+    "extensions": ["contextMenu_variableSetterGetter"]
+  }
+]);  // END JSON EXTRACT (Do not delete this comment.)
+
+
+VARIABLE_COLOUR_MIXIN={	
+	mutationToDom: function() {		
+		var container =document.createElement('mutation');
+		var idVal= this.getFieldValue('VAR');
+		var newHue=hueDict[idVal]; //test val		
+		this.setColour(newHue);
+		container.setAttribute('colour', newHue);
+		return container;
+	},	
+	domToMutation: function(xmlElement) {}	
 };
 
-
-    
+Blockly.Extensions.registerMutator('colour_change_mutator',
+  VARIABLE_COLOUR_MIXIN, null,);
