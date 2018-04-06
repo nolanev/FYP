@@ -5,12 +5,16 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<script src="blockly/blockly_compressed.js"></script>
+<script src="blockly/blockly_uncompressed.js"></script>
 <script src="blockly/JavaScript_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/js/en.js"></script>
 
 <div class="options">
+  <button class = "codebuttons" onclick="showTab(1)">Swap Tab 1</button>
+  <button class = "codebuttons" onclick="showTab(2)">Swap Tab 2</button>
+ 
+
   <button class = "codebuttons" onclick="showCodeJavaScript()">Show JavaScript</button>
   <button class = "codebuttons" onclick="runCodeJavaScript()">Run JavaScript</button>
   <div class="dropdown">
@@ -25,9 +29,13 @@
     </div>
   </div> 
 </div>
-	
-<div  id="blocklyDiv" style="height: 550px; width: 600px;"></div>
 
+
+<div  id="blocklyDiv" style="height: 550px; width: 600px; display: block; position: absolute; "></div>
+<div  id="blocklyDiv2" style="height: 550px; width: 500px; display: block; position: absolute;"></div>
+
+		
+		
 <xml id="toolbox" style="display: none ">
   <category name="Logic" colour="#5C81A6">
     <block type="controls_if" ></block>
