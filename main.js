@@ -19,7 +19,7 @@ var workspace1 = Blockly.inject('blocklyDiv',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
-workspace=workspace1;
+var workspace=workspace1;
 var workspace2 = Blockly.inject('blocklyDiv2',
       {media: 'blockly/media/', 
 	  toolbox: document.getElementById('toolbox'),
@@ -31,33 +31,61 @@ var workspace2 = Blockly.inject('blocklyDiv2',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
-var divArray=document.getElementsByClassName("injectionDiv");
-var div1= divArray[0];
-var div2=divArray[1];
-	showTab(1);
-function showTab(tabNo){
-	if(tabNo==1){
-		div2.style.display = 'none';
-		div1.style.display = 'block';
-		workspace= workspace1;
-	}
-	else if (tabNo==2){
-		div1.style.display = 'none';
-		div2.style.display = 'block';
-		workspace= workspace2;
-	}
+var workspace3 = Blockly.inject('blocklyDiv3',
+      {media: 'blockly/media/', 
+	  toolbox: document.getElementById('toolbox'),
+     zoom:
+         {controls: true,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2},
+     trashcan: true});
+var workspace4 = Blockly.inject('blocklyDiv4',
+      {media: 'blockly/media/', 
+	  toolbox: document.getElementById('toolbox'),
+     zoom:
+         {controls: true,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2},
+     trashcan: true});
+divInit();
 
+function showTab(tabNo){
+	for(var i=0; i< 4; i++){
+		if (i+1==tabNo){
+			blocklyDivArray[i].style.zIndex= '-1';
+			workspace= workspaceArray[i];
+		}
+		else {
+			blocklyDivArray[i].style.zIndex= '-3';
+		}
+	}
+	
 }	 
+function divInit(){
+	divArray=document.getElementsByClassName("injectionDiv");
+	workspaceArray=[workspace1, workspace2, workspace3, workspace4];
+	blocklyDivArray= [blocklyDiv, blocklyDiv2, blocklyDiv3,blocklyDiv4];
+	showTab(1);
+}
 
 
 //JAVASCRIPT	 
 function showCodeJavaScript() {
-      // Generate JavaScript code and display it.
-      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-      var code1 = Blockly.JavaScript.workspaceToCode(workspace1); 
-	  var code2 = Blockly.JavaScript.workspaceToCode(workspace2); 
-	  var code= code1.concat(code2);
-	  alert(code);
+    // Generate JavaScript code and display it.
+    Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+	var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
+    for (var i=1;i<4; i++){
+		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
+		code= code.concat(codei);
+	}
+	
+    alert(code);
     };
 function runCodeJavaScript() {
       // Generate JavaScript code and run it.
@@ -65,9 +93,12 @@ function runCodeJavaScript() {
       Blockly.JavaScript.INFINITE_LOOP_TRAP =
           'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
 	  Blockly.JavaScript.addReservedWords('code');
-      var code1 = Blockly.JavaScript.workspaceToCode(workspace1); 
-	  var code2 = Blockly.JavaScript.workspaceToCode(workspace2); 
-	  var code= code1.concat(code2);
+      var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
+    for (var i=1;i<4; i++){
+		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
+		code= code.concat(codei);
+	}
+	
       Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
       try {
         eval(code);
@@ -134,11 +165,13 @@ workspace.addChangeListener(function( event ) {
 		}
  	} ) 
 Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
- 
-  var variableModelList1 = workspace1.getVariablesOfType('');
-  var variableModelList2 = workspace2.getVariablesOfType('');
-  var variableModelList= variableModelList1.concat(variableModelList2);
- 
+
+var variableModelList=[];
+for( var i=0;i<4;i++){
+	 var vars= workspaceArray[i].getVariablesOfType('');
+	 variableModelList= variableModelList.concat(vars);
+	 
+ }
   variableModelList.sort(Blockly.VariableModel.compareByName);
 
   var xmlList = [];
@@ -201,8 +234,7 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
             '</block>' +
             '</xml>';
         var block = Blockly.Xml.textToDom(blockText).firstChild;
-		//console.log(block);
-        xmlList.push(block);
+		xmlList.push(block);
       }
     }
   }
@@ -215,11 +247,15 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
     Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
         function(text) {
           if (text) {
-            var existing1 = Blockly.Variables.nameUsedWithAnyType_(text, workspace1);
-			var existing2 = Blockly.Variables.nameUsedWithAnyType_(text, workspace2);
-            if ((existing1)||(existing2)) {
+            
+			var existing; //if this variable exists in any other workspace
+			for (var i=0; i<4; i++){
+				existing+= Blockly.Variables.nameUsedWithAnyType_(text, workspaceArray[i]);
+			}
+            if ((existing)) {
               var lowerCase = text.toLowerCase();
-              if ((existing1.type == type)||(existing2.type == type)) {
+			  
+              if ((existing.type == type)) {
                 var msg = Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace(
                     '%1', lowerCase);
               } else {
@@ -320,4 +356,4 @@ VARIABLE_COLOUR_MIXIN={
 	domToMutation: function(xmlElement) {
 		}	
 };
-Blockly.Extensions.registerMutator('colour_change_mutator',VARIABLE_COLOUR_MIXIN, null,);
+Blockly.Extensions.registerMutator('colour_change_mutator',VARIABLE_COLOUR_MIXIN, null);
