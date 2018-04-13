@@ -6,10 +6,40 @@ var tab2=false;
 var tab1Json=[];
 var tab2Json=[];
 
+function fontSelect(font){
+	if (font==1){
+		var fontChoice="Arial";
+	}
+	else if (font==2){
+		var fontChoice="Verdana";
+	}
+	else if (font==3){
+		var fontChoice="Courier New";
+	}
+	var TextElements = document.getElementsByClassName("blocklyText");
 
+	for (var i = 0, max = TextElements.length; i < max; i++) {
+		TextElements[i].style.fontFamily = fontChoice;
+	}	
+	var TextElements = document.getElementsByClassName("blocklyHtmlInput");
+
+	for (var i = 0, max = TextElements.length; i < max; i++) {
+		TextElements.style.fontFamily = fontChoice;
+	}	
+	var TextElements = document.getElementsByClassName("blocklyTreeLabel");
+
+	for (var i = 0, max = TextElements.length; i < max; i++) {
+		TextElements[i].style.fontFamily = fontChoice;
+	}
+	var TextElements = document.getElementsByClassName("options");
+	for (var i = 0, max = TextElements.length; i < max; i++) {
+		TextElements[i].style.fontFamily = fontChoice;
+	}
+};
+    
 //WORKSPACE(S!)
 var workspace1 = Blockly.inject('blocklyDiv',
-      {media: 'blockly/media/', 
+      {media: 'blockly/media/', sounds: false,
 	  toolbox: document.getElementById('toolbox'),
      zoom:
          {controls: true,
@@ -21,7 +51,7 @@ var workspace1 = Blockly.inject('blocklyDiv',
      trashcan: true});
 var workspace=workspace1;
 var workspace2 = Blockly.inject('blocklyDiv2',
-      {media: 'blockly/media/', 
+      {media: 'blockly/media/', sounds: false,
 	  toolbox: document.getElementById('toolbox'),
      zoom:
          {controls: true,
@@ -32,7 +62,7 @@ var workspace2 = Blockly.inject('blocklyDiv2',
           scaleSpeed: 1.2},
      trashcan: true});
 var workspace3 = Blockly.inject('blocklyDiv3',
-      {media: 'blockly/media/', 
+      {media: 'blockly/media/', sounds: false,
 	  toolbox: document.getElementById('toolbox'),
      zoom:
          {controls: true,
@@ -43,7 +73,7 @@ var workspace3 = Blockly.inject('blocklyDiv3',
           scaleSpeed: 1.2},
      trashcan: true});
 var workspace4 = Blockly.inject('blocklyDiv4',
-      {media: 'blockly/media/', 
+      {media: 'blockly/media/', sounds: false,
 	  toolbox: document.getElementById('toolbox'),
      zoom:
          {controls: true,
@@ -54,7 +84,6 @@ var workspace4 = Blockly.inject('blocklyDiv4',
           scaleSpeed: 1.2},
      trashcan: true});
 divInit();
-
 function showTab(tabNo){
 	for(var i=0; i< 4; i++){
 		if (i+1==tabNo){
@@ -68,12 +97,12 @@ function showTab(tabNo){
 	
 }	 
 function divInit(){
-	divArray=document.getElementsByClassName("injectionDiv");
+	document.getElementById('codeBox').style.zIndex='-7';
+	
 	workspaceArray=[workspace1, workspace2, workspace3, workspace4];
 	blocklyDivArray= [blocklyDiv, blocklyDiv2, blocklyDiv3,blocklyDiv4];
 	showTab(1);
 }
-
 
 //JAVASCRIPT	 
 function showCodeJavaScript() {
@@ -84,28 +113,50 @@ function showCodeJavaScript() {
 		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
 		code= code.concat(codei);
 	}
-	
-    alert(code);
+    var codeBox = document.getElementById('codeBox');
+	codeBox.value = code;
+
     };
+function initApi(interpreter, scope) {
+    var codeBox = document.getElementById('outputBox');
+// Add an API function for the alert() block, generated for "text_print" blocks.
+    interpreter.setProperty(scope, 'alert',
+    interpreter.createNativeFunction(function(text) {
+        text = text ? text.toString() : '';
+        codeBox.value +=   text +  '\n'   ;
+      }));	
+    var wrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+    };
+    interpreter.setProperty(scope, 'prompt',
+    interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for highlighting blocks.
+    var wrapper = function(id) {
+        id = id ? id.toString() : '';
+        return interpreter.createPrimitive(highlightBlock(id));
+    };
+    interpreter.setProperty(scope, 'highlightBlock',
+	interpreter.createNativeFunction(wrapper));
+}
 function runCodeJavaScript() {
-      // Generate JavaScript code and run it.
-      window.LoopTrap = 1000;
-      Blockly.JavaScript.INFINITE_LOOP_TRAP =
-          'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
-	  Blockly.JavaScript.addReservedWords('code');
-      var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
+	
+    // Generate JavaScript code and run it.
+    window.LoopTrap = 1000;
+    Blockly.JavaScript.INFINITE_LOOP_TRAP =
+        'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+	Blockly.JavaScript.addReservedWords('code');
+    var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
     for (var i=1;i<4; i++){
 		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
 		code= code.concat(codei);
 	}
+	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+	myInterpreter = new Interpreter(code, initApi);
+	myInterpreter.run();
 	
-      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-      try {
-        eval(code);
-      } catch (e) {
-        alert(e);
-      }
-    }	;
+};
 
 //OVERLAY
 window.onclick = function(event) {
@@ -127,27 +178,45 @@ function overlayMenu() {
 function overlayOn(colour){
 		var choice;
 		switch(colour){
-			case 1:
-				choice="pinkOverlay";
+			case 0:
+				document.getElementById("overlay").style.backgroundColor=" rgba(0,0,0, 0)";
 				break;
-				
+			case 1:
+				 document.getElementById("overlay").style.backgroundColor=" rgba(197,168,0, 0.2)";
+				break;
 			case 2:
-				choice="yellowOverlay";
+				 document.getElementById("overlay").style.backgroundColor="rgba(217,117,44, 0.2)";
 				break;
 			case 3:
-				choice="blueOverlay";
+				 document.getElementById("overlay").style.backgroundColor="rgba(212,108,123, 0.2)" ;
 				break;
+			case 4:
+				 document.getElementById("overlay").style.backgroundColor="rgba(184,111,168, 0.2)" ;
+				break;
+			case 5:
+				 document.getElementById("overlay").style.backgroundColor= "rgba(128,118,191, 0.2)";
+				break;
+			case 6:
+				 document.getElementById("overlay").style.backgroundColor="rgba(64,138,191, 0.2)";
+				break;			
+			case 7:
+				 document.getElementById("overlay").style.backgroundColor="rgba(35,156,174, 0.2)";
+				break;
+			case 8:
+				 document.getElementById("overlay").style.backgroundColor= "rgba(112,150,6, 0.2)" ;
+				break;
+			case 9:
+				 document.getElementById("overlay").style.backgroundColor="rgba(26,168,105, 0.2)";
+				break;
+			case 10:
+				 document.getElementById("overlay").style.backgroundColor="rgba(131,128,123, 0.2)";
+				break;
+			
 		}
-		if (document.getElementById(choice).style.display == "block"){
-			document.getElementById(choice).style.display = "none";
-		}
-		else{
-		document.getElementById(choice).style.display = "block";
-		}
+		
 		
 	}
 
-	
 //COLOUR CHANGE
 function recolour(block, hue) { 
 	
