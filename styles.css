@@ -1,3 +1,7 @@
+body{
+	font-family:Arial;
+	margin: 0;
+}
 
 #overlay {
     position: fixed;
@@ -13,41 +17,29 @@
     z-index: 2; 
     cursor: pointer; 
 }
-
-body {
-	font-family: Arial;
-    
+.blocklyTooltipDiv, .blocklyText, .blocklyHtmlInput, .blocklyTreeLabel {
+	font-family: inherit;
 }
 
 
-.codebuttons{
-	font-size: 16px; 
+.tabOn{
+  font-size: inherit; 
   border: none;
   outline: none;
   color: black;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit; 
-  margin: 0;
-  display: inline-block;
-}
-
-.options{
-
- overflow: hidden;
+  padding: 16px 16px;
   background-color: #DCDCDC;
-  font-family: inherit;
+  font-family: inherit; 
+  margin: 0;
+  display: inline-block;
+  oncontextmenu="window.alert('test');
+  
+
 }
 
-.options .colours{
-	float: left;
-  font-size: 16px;
-  text-align: center;
-  padding: 14px 16px;
-}
-.dropdown{	
-	float:right;
-font-size: 16px; 
+
+.tabOff{
+	font-size: inherit; 
   border: none;
   outline: none;
   color: black;
@@ -56,59 +48,60 @@ font-size: 16px;
   font-family: inherit; 
   margin: 0;
   display: inline-block;
-}
-.dropdown .dropdownbutton{
-	font-size: 16px; 
-  border: none;
-  outline: none;
-  color: black;
-  padding: 0px 50px;
-  background-color: inherit;
-  font-family: inherit; 
-  margin: 0;
-}
-.options .colours:hover, .dropdown:hover .dropdownbutton , .codebuttons:hover {
-	background-color: pink;
-}
-.dropdownoptions{
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 155px;
-  z-index: 1;
-}
-.dropdownoptions .colours{
-  float: none;
-  color: black;
-  width: 100%;
-  text-decoration: none;
-  display: block;
-  text-align: left;
+
 }
 
-.dropdown:hover .dropdownoptions {
-  display: block;
+.tabOff:hover {
+  background-color: #eee;
 }
+
+
 
 
 #codeBox{  
   width: 400px;
   height: 450px;
-  font-size: 24px;
+  font-size: inherit;
+  font-family: inherit;
   position:  absolute;
-  margin-left: 700px;
   white-space: pre-wrap;
   overflow: scroll; 
 	
 }
+
+.codeButton{
+	
+	  position:  absolute;
+	  z-index: 1;
+	 
+}
+.outputButton{
+	margin-top:500px;
+	 position:  absolute;
+	 z-index: 1;
+} 
+
 #outputBox{
   width: 400px;
   height: 100px;
-  font-size: 24px;
+  font-size: inherit;
   position:  absolute;
-  margin-left: 700px;
+    font-family: inherit;
   margin-top: 500px;
   white-space: pre-wrap;
   overflow: scroll; 
 }
 
+#varInput{
+	font-family:inherit;
+	font-size:inherit;
+	margin-top: 5px;
+	margin-bottom: 0;
+	margin-left:120px;
+	margin-right:0;
+	resize: none;
+	position:fixed;
+	z-index:-7;
+	width:140px;
+	height:40px;
+}

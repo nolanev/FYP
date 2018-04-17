@@ -5,38 +5,39 @@ var tab1=true;
 var tab2=false;
 var tab1Json=[];
 var tab2Json=[];
+var currSize = 16;
+var tabCount=1;
 
+
+//CUSTOMISATION OPTIONS
 function fontSelect(font){
 	if (font==1){
-		var fontChoice="Arial";
+		var fontChoice="; font-family: Arial ";
 	}
 	else if (font==2){
-		var fontChoice="Verdana";
+		var fontChoice="; font-family: Verdana ";
 	}
 	else if (font==3){
-		var fontChoice="Courier New";
+		var fontChoice="; font-family: Courier New";
 	}
-	var TextElements = document.getElementsByClassName("blocklyText");
-
-	for (var i = 0, max = TextElements.length; i < max; i++) {
-		TextElements[i].style.fontFamily = fontChoice;
-	}	
-	var TextElements = document.getElementsByClassName("blocklyHtmlInput");
-
-	for (var i = 0, max = TextElements.length; i < max; i++) {
-		TextElements.style.fontFamily = fontChoice;
-	}	
-	var TextElements = document.getElementsByClassName("blocklyTreeLabel");
-
-	for (var i = 0, max = TextElements.length; i < max; i++) {
-		TextElements[i].style.fontFamily = fontChoice;
-	}
-	var TextElements = document.getElementsByClassName("options");
-	for (var i = 0, max = TextElements.length; i < max; i++) {
-		TextElements[i].style.fontFamily = fontChoice;
-	}
+	
+	document.getElementsByTagName("body")[0].setAttribute("style",document.getElementsByTagName("body")[0].getAttribute("style")+fontChoice);
 };
-    
+function fontSize(val){
+	if ((val==1)&&(currSize<40)){
+		
+		currSize=currSize +2;
+		
+		
+	}
+	else if ((val==2)&&(currSize>2)){
+		currSize=currSize -2;
+		
+	}
+	var size="; font-size: "+currSize+"px";
+		document.getElementsByTagName("body")[0].setAttribute("style",document.getElementsByTagName("body")[0].getAttribute("style")+ size);
+}  
+
 //WORKSPACE(S!)
 var workspace1 = Blockly.inject('blocklyDiv',
       {media: 'blockly/media/', sounds: false,
@@ -83,10 +84,49 @@ var workspace4 = Blockly.inject('blocklyDiv4',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
+var workspace5 = Blockly.inject('blocklyDiv5',
+      {media: 'blockly/media/', sounds: false,
+	  toolbox: document.getElementById('toolbox'),
+     zoom:
+         {controls: true,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2},
+     trashcan: true});
+
+
+
 divInit();
 function showTab(tabNo){
-	for(var i=0; i< 4; i++){
+	
+	for(var i=0; i< tabCount; i++){
+		var currTab="T" + (i+1);
+		
 		if (i+1==tabNo){
+			blocklyDivArray[i].style.zIndex= '-1';
+			document.getElementById(currTab).className = 'tabOn';
+			workspace= workspaceArray[i];
+			
+		}
+		else {
+			blocklyDivArray[i].style.zIndex= '-3';
+			document.getElementById(currTab).className = 'tabOff';
+			
+		}
+	}
+	
+}	 
+function divInit(){
+	document.getElementById('codeBox').style.zIndex='-7';
+    
+	workspaceArray=[workspace1, workspace2, workspace3, workspace4, workspace5];
+	blocklyDivArray= [blocklyDiv, blocklyDiv2, blocklyDiv3,blocklyDiv4, blocklyDiv5];
+	workspace=workspaceArray[0];
+	
+	for(var i=0; i< 5; i++){
+		if (i==0){
 			blocklyDivArray[i].style.zIndex= '-1';
 			workspace= workspaceArray[i];
 		}
@@ -94,22 +134,44 @@ function showTab(tabNo){
 			blocklyDivArray[i].style.zIndex= '-3';
 		}
 	}
-	
-}	 
-function divInit(){
-	document.getElementById('codeBox').style.zIndex='-7';
-	
-	workspaceArray=[workspace1, workspace2, workspace3, workspace4];
-	blocklyDivArray= [blocklyDiv, blocklyDiv2, blocklyDiv3,blocklyDiv4];
-	showTab(1);
+
 }
+function createTab(){
+  //creating in new tab button
+  
+  tabCount=tabCount+1;
+ 
+  
+  var button = document.createElement("button");
+ 
+ button.innerHTML = "Tab "+tabCount;
+
+
+
+ button.id="T"+tabCount;
+  button.className="tabOn";  
+  var parameter=tabCount;
+  button.onclick = function(){showTab(parameter)}; 
+  var row = document.getElementById("tabRow");
+  var plusButton = document.getElementById("T0");  
+  row.removeChild(plusButton);
+  row.appendChild(button);
+  if(tabCount<5){
+  row.appendChild(plusButton);  }
+  showTab(tabCount);
+}
+
+
+
+
+
 
 //JAVASCRIPT	 
 function showCodeJavaScript() {
     // Generate JavaScript code and display it.
     Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-	var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
-    for (var i=1;i<4; i++){
+	var code ="\n";
+    for (var i=0;i<4; i++){
 		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
 		code= code.concat(codei);
 	}
@@ -123,7 +185,7 @@ function initApi(interpreter, scope) {
     interpreter.setProperty(scope, 'alert',
     interpreter.createNativeFunction(function(text) {
         text = text ? text.toString() : '';
-        codeBox.value +=   text +  '\n'   ;
+        codeBox.value +=   '\n'+ text    ;
       }));	
     var wrapper = function(text) {
         text = text ? text.toString() : '';
@@ -141,7 +203,8 @@ function initApi(interpreter, scope) {
 	interpreter.createNativeFunction(wrapper));
 }
 function runCodeJavaScript() {
-	
+	var codeBox = document.getElementById('outputBox');
+	codeBox.value=' ';
     // Generate JavaScript code and run it.
     window.LoopTrap = 1000;
     Blockly.JavaScript.INFINITE_LOOP_TRAP =
@@ -172,11 +235,9 @@ window.onclick = function(event) {
     }
   }
 }
-function overlayMenu() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
 function overlayOn(colour){
 		var choice;
+		colour=parseInt(colour);
 		switch(colour){
 			case 0:
 				document.getElementById("overlay").style.backgroundColor=" rgba(0,0,0, 0)";
@@ -217,6 +278,16 @@ function overlayOn(colour){
 		
 	}
 
+//ALERT
+Blockly.prompt = function(message, defaultValue, callback) {
+      callback(document.getElementById("varInput").value);
+   
+};
+
+function tabName(tabNo){
+	document.getElementById(tabNo).innerHTML="";
+}
+	
 //COLOUR CHANGE
 function recolour(block, hue) { 
 	
@@ -232,9 +303,15 @@ workspace.addChangeListener(function( event ) {
 		var varId = block.getFieldValue('VAR');
 		block.setColour(hueDict[varId]);	
 		}
+	 else if ((event.type==Blockly.Events.UI)&&(event.oldValue=="Variables")){
+		 console.log("here");
+		 document.getElementById("varInput").style.zIndex=-7;
+	 }
  	} ) 
+	
+	
 Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
-
+document.getElementById("varInput").style.zIndex=-1;
 var variableModelList=[];
 for( var i=0;i<4;i++){
 	 var vars= workspaceArray[i].getVariablesOfType('');
@@ -296,7 +373,6 @@ for( var i=0;i<4;i++){
 			hueDict[variable.getId()]=hues[counter];
 			counter=counter+1;
 			counter = counter %6;}
-		
         var blockText = '<xml>' +
             '<block type="variables_get" gap="8">' +
             Blockly.Variables.generateVariableFieldXml_(variable) +
@@ -306,13 +382,16 @@ for( var i=0;i<4;i++){
 		xmlList.push(block);
       }
     }
-  }
+  } 
+  
+
   return xmlList;
 };
 Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback, opt_type) {
   var type = opt_type || '';
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
+	  var input =document.getElementById("varInput");
     Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
         function(text) {
           if (text) {
@@ -331,13 +410,15 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
                 var msg = Blockly.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE;
                 msg = msg.replace('%1', lowerCase).replace('%2', existing.type);
               }
-              Blockly.alert(msg,
-                  function() {
-                    promptAndCheckWithAlert(text);  // Recurse
-                  });
+			  input.value="";
+              input.placeholder="Variable Already Exists Try Again";
+			  return;
+			  
             } else {
               // No conflict
               workspace.createVariable(text, type);
+			  input.value="";
+			  input.placeholder="Type Variable Name Here";
               if (opt_callback) {
                 opt_callback(text);
               }
@@ -352,6 +433,24 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
   };
   promptAndCheckWithAlert('');
 };
+
+Blockly.Variables.flyoutCategory = function(workspace) {
+  var xmlList = [];
+  var button = goog.dom.createDom('button');
+  button.setAttribute('text', Blockly.Msg.NEW_VARIABLE);
+  button.setAttribute('callbackKey', 'CREATE_VARIABLE');
+
+  workspace.registerButtonCallback('CREATE_VARIABLE', function(button) {
+    Blockly.Variables.createVariableButtonHandler(button.getTargetWorkspace());
+  });
+
+  xmlList.push(button);
+
+  var blockList = Blockly.Variables.flyoutCategoryBlocks(workspace);
+  xmlList = xmlList.concat(blockList);
+  return xmlList;
+};
+
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable getter.
   {
@@ -393,7 +492,22 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
     "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
     "extensions": ["contextMenu_variableSetterGetter"]
-  }
+  },
+  {
+  "type": "textinput",
+  "message0": " ",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "FIELDNAME",
+      "text": "variable_name"
+    }
+  ]
+}
+  
+  
+  
+  
 ]);  // END JSON EXTRACT (Do not delete this comment.)
 VARIABLE_COLOUR_MIXIN={	
 	
@@ -426,3 +540,23 @@ VARIABLE_COLOUR_MIXIN={
 		}	
 };
 Blockly.Extensions.registerMutator('colour_change_mutator',VARIABLE_COLOUR_MIXIN, null);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html lang ="en">
 <head>
-
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <link rel="stylesheet" href="styles.css">
 <script src="blockly/blockly_uncompressed.js"></script>
 <script src="blockly/JavaScript_compressed.js"></script>
 <script src="blockly/blocks_compressed.js"></script>
 <script src="blockly/msg/js/en.js"></script>
 <script src="acorn_interpreter.js"></script>
-    <script src="interpreter.js"></script>
+<script src="interpreter.js"></script>
+</head>
+<body>
+
+  <table cellspacing="0" cellpadding="0" width="100%" style= "background-color: #BBB;">
+    <tr>
+      <td id= "tabRow">
+	     <button id="T1" class = "tabOn" onclick="showTab(1)" ondblclick="tabName(id)">Tab 1</button>
+		 <button id="T0" Class= "tabOff" onclick = "createTab()"> + </button>
+		 
+	  </td>
+	  <td style= "float: right; margin-top:12px; margin-right: 5px;">
+	    <select onChange="fontSelect(this.value); "   >
+	      <option >Select Font</option>
+	      <option value= 1 >Arial</option>
+	      <option value=2>Courier New</option>
+	      <option value=3>Veranda</option>
+	    </select> 
+		<select onChange= "overlayOn(this.value);">
+		    <option value =0 >Overlay Off</option>
+            <option value =1 >Yellow</option>
+            <option value =2>Orange</option>
+            <option value =3>Rose</option>      
+            <option value =4 >Pink</option>
+            <option value =5>Purple</option>
+            <option value =6>Blue</option>      
+            <option value =7 >Aqua</option>
+            <option value =8>Lime</option>
+            <option value =9>Mint</option>	  
+            <option value =10>Grey</option>
+        </select>
+	    <button onclick ="fontSize(1)"> A+</button>
+	    <button onclick ="fontSize(2)"> A-</button> 
 	
-<div class="options">
-  <button class = "codebuttons" onclick="showTab(1)">Swap Tab 1</button>
-  <button class = "codebuttons" onclick="showTab(2)">Swap Tab 2</button>
- <button class = "codebuttons" onclick="showTab(3)">Swap Tab 3</button>
-  <button class = "codebuttons" onclick="showTab(4)">Swap Tab 4</button>
- 
+	  </td>
+	</tr>
+	</table>
+	<table cellspacing="0" cellpadding="0" width="100%"
+	<tr>
+	  <td>  
+	    <div  id="blocklyDiv" style="height:  600px; width: 600px; display: block; position:  absolute; z-index =-1; "></div>
+	    <div  id="blocklyDiv2" style="height:  600px; width: 600px; display: block; position: absolute; z-index=-3; "></div>
+	    <div  id="blocklyDiv3" style="height: 600px; width: 600px; display: block; position: absolute; z-index=-3;"></div>
+	    <div  id="blocklyDiv4" style="height: 600px; width: 600px; display: block; position: absolute; z-index=-3;  "></div>
+	    <div  id="blocklyDiv5" style="height: 600px; width: 600px; display: block; position: absolute; z-index=-3; "></div>
+	  </td>
+	  <td>
+	    
+        <button class="codeButton"  onclick="showCodeJavaScript()">Show JavaScript</button>
+        <textarea id="codeBox" disabled="disabled"></textarea>
+        <button class="outputButton" onclick="runCodeJavaScript()">Run JavaScript</button>
+		<textarea id="outputBox" disabled="disabled"></textarea>
 
-  <button class = "codebuttons" onclick="showCodeJavaScript()">Show JavaScript</button>
-  <button class = "codebuttons" onclick="runCodeJavaScript()">Run JavaScript</button>
-  <div class="dropdown">
-    <button class = "dropdownbutton"  >Overlay
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdownoptions">
-      <button class="colours" onclick="overlayOn(0)" >None</button>
-	  <button class="colours" onclick="overlayOn(1)" >Yellow</button>
-	  <button class="colours" onclick="overlayOn(2)">Orange</button>
-	  <button class="colours" onclick="overlayOn(3)">Rose</button>      
-	  <button class="colours" onclick="overlayOn(4)" >Pink</button>
-	  <button class="colours" onclick="overlayOn(5)">Purple</button>
-	  <button class="colours" onclick="overlayOn(6)">Blue</button>      
-	  <button class="colours" onclick="overlayOn(7)" >Aqua</button>
-	  <button class="colours" onclick="overlayOn(8)">Lime</button>
-	  <button class="colours" onclick="overlayOn(9)">Mint</button>	  
-	  <button class="colours" onclick="overlayOn(10)">Grey</button>
-      
-    </div>
-  </div> 
-    <div class="dropdown">
-    <button class = "dropdownbutton"  >Font
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdownoptions">
-      <button class="colours" onclick="fontSelect(1)" >Arial</button>
-	  <button class="colours" onclick="fontSelect(2)" >Courier New</button>
-	  <button class="colours" onclick="fontSelect(3)" >Verdana</button>
-	      
-    </div>
-  </div> 
-  
-  
-  
-</div>
+	  </td>
+	  
+	</tr>
+  </table>
+  		
+		
+		  <textarea id="varInput" placeholder="Type Variable Name Here" ></textarea>	
 
-
-<div  id="blocklyDiv" style="height:  600px; width: 600px; display: block; position:  absolute; "></div>
-<div  id="blocklyDiv2" style="height:  600px; width: 600px; display: block; position: absolute; "></div>
-<div  id="blocklyDiv3" style="height: 600px; width: 600px; display: block; position: absolute; "></div>
-<div  id="blocklyDiv4" style="height: 600px; width: 600px; display: block; position: absolute;  "></div>
-
-	
-<textarea id="codeBox" disabled="disabled"></textarea>
-<textarea id="outputBox" disabled="disabled"></textarea>
 		
 <xml id="toolbox" style="display: none ">
   <category name="Logic" colour="#5C81A6">
@@ -422,15 +425,13 @@
     </block>
   </category>
   <sep></sep>
-  <category name="Variables" colour="#FF70DE" custom="VARIABLE"></category>
+  <category name="Variables" colour="#FF70DE" custom="VARIABLE"> </category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
 </xml>
 
 <div id="overlay" ></div>
 
 
-<script src="main.js"></script>
-
-
+<script src="main.js"></script
 </body>
 </html>
