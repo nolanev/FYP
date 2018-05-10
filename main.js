@@ -1,15 +1,11 @@
 var hueDict={};
-var hues= [10,180,300, 320, 240, 60];
+var hues= [100,180,300, 60, 240, 360];
 var counter=0;
-var tab1=true;
-var tab2=false;
-var tab1Json=[];
-var tab2Json=[];
-var currSize = 16;
-var tabCount=1;
+var currSize = 16; //automatic font size
+var tabCount=1;//num of created tabs
 
 
-//CUSTOMISATION OPTIONS
+//FONT OPTIONS
 function fontSelect(font){
 	if (font==1){
 		var fontChoice="; font-family: Arial ";
@@ -95,9 +91,6 @@ var workspace5 = Blockly.inject('blocklyDiv5',
           minScale: 0.3,
           scaleSpeed: 1.2},
      trashcan: true});
-
-
-
 divInit();
 function showTab(tabNo){
 	
@@ -105,18 +98,16 @@ function showTab(tabNo){
 		var currTab="T" + (i+1);
 		
 		if (i+1==tabNo){
-			blocklyDivArray[i].style.zIndex= '-1';
+			blocklyDivArray[i].style.zIndex= '3';
 			document.getElementById(currTab).className = 'tabOn';
 			workspace= workspaceArray[i];
 			
 		}
 		else {
 			blocklyDivArray[i].style.zIndex= '-3';
-			document.getElementById(currTab).className = 'tabOff';
-			
+			document.getElementById(currTab).className = 'tabOff';			
 		}
 	}
-	
 }	 
 function divInit(){
 	document.getElementById('codeBox').style.zIndex='-7';
@@ -127,7 +118,7 @@ function divInit(){
 	
 	for(var i=0; i< 5; i++){
 		if (i==0){
-			blocklyDivArray[i].style.zIndex= '-1';
+			blocklyDivArray[i].style.zIndex= '3';
 			workspace= workspaceArray[i];
 		}
 		else {
@@ -137,18 +128,12 @@ function divInit(){
 
 }
 function createTab(){
-  //creating in new tab button
+  //on click of new tab button another tab button is created
   
-  tabCount=tabCount+1;
- 
-  
-  var button = document.createElement("button");
- 
- button.innerHTML = "Tab "+tabCount;
-
-
-
- button.id="T"+tabCount;
+  tabCount=tabCount+1;  
+  var button = document.createElement("button"); 
+  button.innerHTML = "Tab "+tabCount;
+  button.id="T"+tabCount;
   button.className="tabOn";  
   var parameter=tabCount;
   button.onclick = function(){showTab(parameter)}; 
@@ -157,50 +142,37 @@ function createTab(){
   row.removeChild(plusButton);
   row.appendChild(button);
   if(tabCount<5){
-  row.appendChild(plusButton);  }
+    row.appendChild(plusButton);  
+	}
   showTab(tabCount);
 }
-
-
-
-
-
+function tabName(tabNo){
+	document.getElementById(tabNo).innerHTML="";
+}
 
 //JAVASCRIPT	 
 function showCodeJavaScript() {
     // Generate JavaScript code and display it.
     Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 	var code ="\n";
-    for (var i=0;i<4; i++){
+	
+    for (var i=0;i<5; i++){
 		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
 		code= code.concat(codei);
-	}
-    var codeBox = document.getElementById('codeBox');
+	} //for all workspaces
+    
+	var codeBox = document.getElementById('codeBox');
 	codeBox.value = code;
 
     };
-function initApi(interpreter, scope) {
+//New interpreter function for my new alerts
+function initApi(myInterpreter, scope) {
     var codeBox = document.getElementById('outputBox');
-// Add an API function for the alert() block, generated for "text_print" blocks.
-    interpreter.setProperty(scope, 'alert',
-    interpreter.createNativeFunction(function(text) {
+    myInterpreter.setProperty(scope, 'alert',
+    myInterpreter.createNativeFunction(function(text) {
         text = text ? text.toString() : '';
-        codeBox.value +=   '\n'+ text    ;
-      }));	
-    var wrapper = function(text) {
-        text = text ? text.toString() : '';
-        return interpreter.createPrimitive(prompt(text));
-    };
-    interpreter.setProperty(scope, 'prompt',
-    interpreter.createNativeFunction(wrapper));
-
-      // Add an API function for highlighting blocks.
-    var wrapper = function(id) {
-        id = id ? id.toString() : '';
-        return interpreter.createPrimitive(highlightBlock(id));
-    };
-    interpreter.setProperty(scope, 'highlightBlock',
-	interpreter.createNativeFunction(wrapper));
+        codeBox.value +='\n'+ text;
+    }));	
 }
 function runCodeJavaScript() {
 	var codeBox = document.getElementById('outputBox');
@@ -211,10 +183,10 @@ function runCodeJavaScript() {
         'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
 	Blockly.JavaScript.addReservedWords('code');
     var code =Blockly.JavaScript.workspaceToCode(workspaceArray[0]);
-    for (var i=1;i<4; i++){
+    for (var i=1;i<5; i++){
 		var codei=Blockly.JavaScript.workspaceToCode(workspaceArray[i]);
 		code= code.concat(codei);
-	}
+	}// for all workspaces
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 	myInterpreter = new Interpreter(code, initApi);
 	myInterpreter.run();
@@ -243,50 +215,58 @@ function overlayOn(colour){
 				document.getElementById("overlay").style.backgroundColor=" rgba(0,0,0, 0)";
 				break;
 			case 1:
-				 document.getElementById("overlay").style.backgroundColor=" rgba(197,168,0, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor=" rgba(197,168,0, 0.1)";
 				break;
 			case 2:
-				 document.getElementById("overlay").style.backgroundColor="rgba(217,117,44, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor="rgba(217,117,44, 0.1)";
 				break;
 			case 3:
-				 document.getElementById("overlay").style.backgroundColor="rgba(212,108,123, 0.2)" ;
+				 document.getElementById("overlay").style.backgroundColor="rgba(212,108,123, 0.1)" ;
 				break;
 			case 4:
-				 document.getElementById("overlay").style.backgroundColor="rgba(184,111,168, 0.2)" ;
+				 document.getElementById("overlay").style.backgroundColor="rgba(184,111,168, 0.1)" ;
 				break;
 			case 5:
-				 document.getElementById("overlay").style.backgroundColor= "rgba(128,118,191, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor= "rgba(128,118,191, 0.1)";
 				break;
 			case 6:
-				 document.getElementById("overlay").style.backgroundColor="rgba(64,138,191, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor="rgba(64,138,191, 0.1)";
 				break;			
 			case 7:
-				 document.getElementById("overlay").style.backgroundColor="rgba(35,156,174, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor="rgba(35,156,174, 0.1)";
 				break;
 			case 8:
-				 document.getElementById("overlay").style.backgroundColor= "rgba(112,150,6, 0.2)" ;
+				 document.getElementById("overlay").style.backgroundColor= "rgba(112,150,6, 0.1)" ;
 				break;
 			case 9:
-				 document.getElementById("overlay").style.backgroundColor="rgba(26,168,105, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor="rgba(26,168,105, 0.1)";
 				break;
 			case 10:
-				 document.getElementById("overlay").style.backgroundColor="rgba(131,128,123, 0.2)";
+				 document.getElementById("overlay").style.backgroundColor="rgba(131,128,123, 0.1)";
 				break;
 			
 		}
 		
 		
-	}
+}
+//Change all the Blockly values for the AAA colours
+function changeContrast(){
+	Blockly.HSV_SATURATION = 1; 
+	Blockly.HSV_VALUE = 0.45;
+	Blockly.Msg.LOGIC_HUE= 10;
+	Blockly.Msg.LOOPS_HUE= 190;
+	Blockly.Msg.MATH_HUE=265;
+	Blockly.Msg.TEXTS_HUE=230;
+	Blockly.Msg.LISTS_HUE=42;
+	Blockly.Msg.COLOUR_HUE=330;
+	Blockly.Msg.PROCEDURES_HUE=290;
+}
 
 //ALERT
-Blockly.prompt = function(message, defaultValue, callback) {
-      callback(document.getElementById("varInput").value);
-   
+Blockly.prompt = function(message, defaultValue, callback) { //overwriting Blockly alert function
+      callback(document.getElementById("varInput").value);   
 };
 
-function tabName(tabNo){
-	document.getElementById(tabNo).innerHTML="";
-}
 	
 //COLOUR CHANGE
 function recolour(block, hue) { 
@@ -301,25 +281,31 @@ workspace.addChangeListener(function( event ) {
 	 if (event.type==Blockly.Events.BLOCK_CHANGE){
 		var block= workspace.getBlockById(event.blockId);
 		var varId = block.getFieldValue('VAR');
-		block.setColour(hueDict[varId]);	
+		block.setColour(hueDict[varId]);
 		}
 	 else if ((event.type==Blockly.Events.UI)&&(event.oldValue=="Variables")){
 		 console.log("here");
 		 document.getElementById("varInput").style.zIndex=-7;
 	 }
  	} ) 
-	
-	
 Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
-document.getElementById("varInput").style.zIndex=-1;
+document.getElementById("varInput").style.zIndex=3;
 var variableModelList=[];
-for( var i=0;i<4;i++){
+for( var i=0;i<5;i++){
 	 var vars= workspaceArray[i].getVariablesOfType('');
 	 variableModelList= variableModelList.concat(vars);
 	 
  }
   variableModelList.sort(Blockly.VariableModel.compareByName);
-
+  
+  
+  for (var i = 0, variable; variable = variableModelList[i]; i++) {
+  if( !hueDict[variable.getId()]){
+			hueDict[variable.getId()]=hues[counter];
+			counter=counter+1;
+			counter = counter %6;}
+  }
+  
   var xmlList = [];
   if (variableModelList.length > 0) {
     var firstVariable = variableModelList[0];
@@ -327,12 +313,7 @@ for( var i=0;i<4;i++){
     if (Blockly.Blocks['variables_set']) {
       var gap = Blockly.Blocks['math_change'] ? 8 : 24;
 	  
-	  if( !hueDict[firstVariable.getId()]){
-			hueDict[firstVariable.getId()]=hues[counter];
-			counter=counter+1;
-			counter = counter %6;
-			}
-	  
+  
 	  var myhue=hueDict[firstVariable.getId()];
 	  
 	  recolour(Blockly.Blocks['variables_set'],myhue);
@@ -365,14 +346,10 @@ for( var i=0;i<4;i++){
 	 
       xmlList.push(block);
     }
-	
+
     for (var i = 0, variable; variable = variableModelList[i]; i++) {
-      if (Blockly.Blocks['variables_get']) {
-		  
-		if( !hueDict[variable.getId()]){
-			hueDict[variable.getId()]=hues[counter];
-			counter=counter+1;
-			counter = counter %6;}
+      if (Blockly.Blocks['variables_get']) {		  
+		
         var blockText = '<xml>' +
             '<block type="variables_get" gap="8">' +
             Blockly.Variables.generateVariableFieldXml_(variable) +
@@ -391,13 +368,13 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
   var type = opt_type || '';
   // This function needs to be named so it can be called recursively.
   var promptAndCheckWithAlert = function(defaultName) {
-	  var input =document.getElementById("varInput");
+	var input = document.getElementById("varInput");
     Blockly.Variables.promptName(Blockly.Msg.NEW_VARIABLE_TITLE, defaultName,
         function(text) {
           if (text) {
             
 			var existing; //if this variable exists in any other workspace
-			for (var i=0; i<4; i++){
+			for (var i=0; i<5; i++){
 				existing+= Blockly.Variables.nameUsedWithAnyType_(text, workspaceArray[i]);
 			}
             if ((existing)) {
@@ -411,14 +388,14 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
                 msg = msg.replace('%1', lowerCase).replace('%2', existing.type);
               }
 			  input.value="";
-              input.placeholder="Variable Already Exists Try Again";
+              input.placeholder="Variable Already Exists! Try Again";
 			  return;
 			  
             } else {
               // No conflict
               workspace.createVariable(text, type);
 			  input.value="";
-			  input.placeholder="Type Variable Name Here";
+			  input.placeholder="Type Variable Name Here ...";
               if (opt_callback) {
                 opt_callback(text);
               }
@@ -433,7 +410,6 @@ Blockly.Variables.createVariableButtonHandler = function(workspace, opt_callback
   };
   promptAndCheckWithAlert('');
 };
-
 Blockly.Variables.flyoutCategory = function(workspace) {
   var xmlList = [];
   var button = goog.dom.createDom('button');
@@ -450,7 +426,6 @@ Blockly.Variables.flyoutCategory = function(workspace) {
   xmlList = xmlList.concat(blockList);
   return xmlList;
 };
-
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable getter.
   {
@@ -510,47 +485,16 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   
 ]);  // END JSON EXTRACT (Do not delete this comment.)
 VARIABLE_COLOUR_MIXIN={	
-	
-	
 	mutationToDom: function() {		
-	
-		var container =document.createElement('mutation');
-		
-		//PROBLEM IS HAPPENING HERE
-		
-		var idVal= this.getFieldValue('VAR');
-	
-		if((idVal=='xa`q:YSNX:x3hzs3.|NX')||(idVal=='|v7Hx*!FG7FP0g(`e1H`')){
-			return null;
-		}
-		if(!hueDict[idVal]){
-			hueDict[idVal]=hues[counter];
-			counter = counter +1;
-			counter= counter %6;
-		}
-		
+		var container =document.createElement('mutation');		
+		var idVal= this.getFieldValue('VAR');	
 		var newHue=hueDict[idVal];		
-		this.setColour(newHue);
-		
-
-		
+		this.setColour(newHue); 
 		return null;
 	},	
-	domToMutation: function(xmlElement) {
-		}	
+	domToMutation: function(xmlElement) {}	
 };
 Blockly.Extensions.registerMutator('colour_change_mutator',VARIABLE_COLOUR_MIXIN, null);
-
-
-
-
-
-
-
-
-
-
-
 
 
 

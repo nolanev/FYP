@@ -15,7 +15,7 @@
     <tr>
       <td id= "tabRow">
 	     <button id="T1" class = "tabOn" onclick="showTab(1)" ondblclick="tabName(id)">Tab 1</button>
-		 <button id="T0" Class= "tabOff" onclick = "createTab()"> + </button>
+		 <button id="T0" Class= "tabOff" onclick = "createTab()"> New Tab </button>
 		 
 	  </td>
 	  <td style= "float: right; margin-top:12px; margin-right: 5px;">
@@ -38,8 +38,9 @@
             <option value =9>Mint</option>	  
             <option value =10>Grey</option>
         </select>
-	    <button onclick ="fontSize(1)"> A+</button>
-	    <button onclick ="fontSize(2)"> A-</button> 
+		<button onclick ="changeContrast()"> Change Block Contrast </button>
+	    <button onclick ="fontSize(1)"> A+ </button>
+	    <button onclick ="fontSize(2)"> A- </button> 
 	
 	  </td>
 	</tr>
@@ -47,7 +48,7 @@
 	<table cellspacing="0" cellpadding="0" width="100%"
 	<tr>
 	  <td>  
-	    <div  id="blocklyDiv" style="height:  600px; width: 600px; display: block; position:  absolute; z-index =-1; "></div>
+	    <div  id="blocklyDiv" style="height:  600px; width: 600px; display: block; position:  absolute; z-index =3; "></div>
 	    <div  id="blocklyDiv2" style="height:  600px; width: 600px; display: block; position: absolute; z-index=-3; "></div>
 	    <div  id="blocklyDiv3" style="height: 600px; width: 600px; display: block; position: absolute; z-index=-3;"></div>
 	    <div  id="blocklyDiv4" style="height: 600px; width: 600px; display: block; position: absolute; z-index=-3;  "></div>
@@ -66,7 +67,7 @@
   </table>
   		
 		
-		  <textarea id="varInput" placeholder="Type Variable Name Here" ></textarea>	
+		  <textarea id="varInput" placeholder="Type Variable Name Here ..." ></textarea>	
 
 		
 <xml id="toolbox" style="display: none ">
@@ -227,9 +228,7 @@
       <mutation at="true"></mutation>
       <field name="WHERE">FROM_START</field>
       <value name="VALUE">
-        <block type="variables_get">
-          <field name="VAR" id="xa`q:YSNX:x3hzs3.|NX" variabletype="">text</field>
-        </block>
+        
       </value>
     </block>
     <block type="text">
@@ -260,9 +259,7 @@
     <block type="text_indexOf">
       <field name="END">FIRST</field>
       <value name="VALUE">
-        <block type="variables_get">
-          <field name="VAR" id="xa`q:YSNX:x3hzs3.|NX" variabletype="">text</field>
-        </block>
+        
       </value>
       <value name="FIND">
         <shadow type="text">
@@ -278,9 +275,7 @@
       <field name="WHERE1">FROM_START</field>
       <field name="WHERE2">FROM_START</field>
       <value name="STRING">
-        <block type="variables_get">
-          <field name="VAR" id="xa`q:YSNX:x3hzs3.|NX" variabletype="">text</field>
-        </block>
+        
       </value>
     </block>
     <block type="text_changeCase">
@@ -320,9 +315,7 @@
     <block type="lists_indexOf">
       <field name="END">FIRST</field>
       <value name="VALUE">
-        <block type="variables_get">
-          <field name="VAR" id="|v7Hx*!FG7FP0g(`e1H`" variabletype="">list</field>
-        </block>
+       
       </value>
     </block>
     <block type="lists_create_with">
@@ -345,9 +338,8 @@
       <field name="MODE">GET</field>
       <field name="WHERE">FROM_START</field>
       <value name="VALUE">
-        <block type="variables_get">
-          <field name="VAR" id="|v7Hx*!FG7FP0g(`e1H`" variabletype="">list</field>
-        </block>
+       
+	   
       </value>
     </block>
     <block type="lists_setIndex">
@@ -355,9 +347,7 @@
       <field name="MODE">SET</field>
       <field name="WHERE">FROM_START</field>
       <value name="LIST">
-        <block type="variables_get">
-          <field name="VAR" id="|v7Hx*!FG7FP0g(`e1H`" variabletype="">list</field>
-        </block>
+        
       </value>
     </block>
     <block type="lists_getSublist">
@@ -365,9 +355,7 @@
       <field name="WHERE1">FROM_START</field>
       <field name="WHERE2">FROM_START</field>
       <value name="LIST">
-        <block type="variables_get">
-          <field name="VAR" id="|v7Hx*!FG7FP0g(`e1H`" variabletype="">list</field>
-        </block>
+     
       </value>
     </block>
     <block type="lists_split">
